@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% block content%}
+
+{% load static %}
+<style>
+    .flex-container
+    {
+    display: flex;
+    justify-content: center;
+    }
+    #my_button button
+    {
+        height:50px;
+        width:250px;
+        visibility: block;
+    }
+</style>
+<title>Welcome to OCR Detector</title>
+<body onload="f1();f2();">
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-warning alert-dismissible fade show mt-3" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        {{ message }}
+    </div>
+    {% endfor %}
+    {% endif %}
+<div class="container mt-5">
+    <div class="flex-container">
+        <div class="mr-5 mt-3">
+            <form action="{% url 'index' %}" enctype="multipart/form-data" method="POST">
+                {% csrf_token %}
+                <h2>Select the File:</h2>
+                <p class="mt-5 mb-3">
+                    <input type="file" name="upload" class="inputfield">
+                </p>
+                <button class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+        <div class="mr-5" id="my_button">
+            <form action="{% url 'output' %}" method="POST">
+                {% csrf_token %}
+                <button class="btn btn-success mt-4" id="ocr_button">OCR and Audio</button>
+            </form>
+            <form action="{% url 'translate_language' %}" method="POST">
+                {% csrf_token %}
+                <button class="btn btn-primary mt-4" id="">Translate Language</button>
+            </form>
+            <form action="{% url 'generate_audio_from_text' %}" method="POST">
+                {% csrf_token %}
+                <button class="btn btn-danger mt-4" id="">Audio Translator</button>
+            </form>
+            <form action="{% url 'Doc_to_Pdf' %}" method="POST">
+                {% csrf_token %}
+                <button class="btn btn-dark mt-4" id="">PDF to DOC/DOC to PDF</button>
+            </form>
+            <form action="#" method="POST">
+                {% csrf_token %}
+                <button class="btn btn-warning mt-4" id="">Image Compression</button>
+            </form>
+            <form action="#" method="POST">
+                {% csrf_token %}
+                <button class="btn btn-info mt-4" id="">Image Conversion</button>
+            </form>
+        </div>
+        <div class="ml-5">
+            <p class="h2 mx-auto mb-4" style="width:250px; visibility:hidden;" id="text_upld">Uploaded Image</p>
+            <div class="card" style="width: auto; height: auto;" id="div_for_upImg">
+                <img class="card-img-top" style="width: 380px; height: 300px;visibility:hidden;" id="SM" src="">
+            </div>
+        <div>
+</div>
+    </div>
+</div>
+</body>
+<script>
+    function f1()
+    {
+        var a="{% for message in messages %}{{ message }}{% endfor %}";
+        var n=a.localeCompare("Image Successfully Uploaded !");
+        if(n!=0)
+        {
+            document.getElementById("SM").style.visibility="hidden";
+            document.getElementById("div_for_upImg").style.display = "none" ;
+        }
+        else
+        {
+            document.getElementById("SM").style.visibility="visible";
+            document.getElementById("text_upld").style.visibility="visible";
+            document.getElementById("ocr_button").style.visibility="visible";
+        }
+        //console.log('hello');
+    }
+    function f2()
+    {
+        var a="{{ image.upload }}";
+        var res = a.replace("OCR_detection/","/");
+        var path=res;
+        //console.log(res);
+        document.getElementById("SM").src=res;
+    }
+
+</script>
+{% endblock %}

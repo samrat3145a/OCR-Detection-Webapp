@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% block content%}
+
+{% load static %}
+<title>OCR and Audio Generator</title>
+<style>
+    .flex-container {
+    display: flex;
+    justify-content: center;
+    }
+    img{
+        background-clip: border-box;
+        border: 1px solid rgba(0,0,0,.125);
+        border-radius: .25rem;
+    }
+</style>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript">
+    $("#btnPrint").live("click", function () {
+        var divContents = $("#dvContainer").html();
+        var divToPrint=document.getElementById("ocrText");
+        var printWindow = window.open('', '', 'height=400,width=800');
+        printWindow.document.write(divContents);
+        printWindow.document.close();
+        printWindow.print();
+    });
+</script>
+<body class="mb-5" onload="f1();f2();">
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-warning alert-dismissible fade show mt-3" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        {{ message }}
+    </div>
+
+    {% endfor %}
+    {% endif %}
+    <p class="h1 mx-auto mt-4 mb-5" style="width:475px">OCR and Audio Generator</p>
+    <div class="flex-container">
+        <div>
+            <p class="h2 mx-auto" style="width:230px">Original Image</p>
+            <img class="mt-4" src="" style="width: 400px; height: 300px;" id="SM">
+        </div>
+        <div class="ml-5 mr-5">
+            <i class="fa fa-arrow-right fa-5x" style="margin-top:9rem"></i>
+        </div>
+        <div>
+            <p class="h2 mx-auto" style="width:230px">Detected Letter</p>
+            <img class="mt-4" src="{{ final_path_img }}" style="width: 400px; height: 300px;" id="SM1">
+        </div>  
+    </div>
+    <p class="h1 mx-auto mt-5 mb-3" style="width:360px">
+        Generated OCR
+        <a class="fa fa-print ml-3" id="btnPrint"></a>
+    </p>
+    <div id="dvContainer" class="mt-5 mb-5">
+        <p id="ocrText">{{ text }}</p>
+    </div>
+    <form action="{% url 'generate_audio' %}" method="POST">
+        {% csrf_token %}
+        <button class="btn btn-success mb-4">Click here Generate the Audio</button>
+    </form>
+    <div id="audio" class="mb-5">
+        <audio controls id="text_to_audio_1">
+            <source src="{{ final_path }}" type="audio/mpeg" id="text_to_audio" ></source>
+        </audio> 
+    </div>
+</body>
+<script>
+function f1()
+{
+    var a="{{ image.upload }}";
+    var res = a.replace("OCR_detection/","/");
+    var path=res;
+    //console.log(res);
+    document.getElementById("SM").src=res;
+}
+function f2()
+{
+    var y = document.getElementById("text_to_audio_1");
+    var x = document.getElementById("text_to_audio");
+    if(x.src == "http://127.0.0.1:8000"+"{{ request.path }}")
+    {
+        y.style.display = "none" ;
+    }
+}
+</script>
+{% endblock %}

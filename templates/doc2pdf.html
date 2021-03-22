@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% block content%}
+
+{% load static %}
+<style>
+    .flex-container
+    {
+    display: flex;
+    justify-content: center;
+    }
+    #my_button button
+    {
+        height:50px;
+        width:250px;
+        visibility: block;
+    }
+</style>
+
+<title>Welcome to Pdf to Doc Convertor</title>
+<body>
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-warning alert-dismissible fade show mt-3" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        {{ message }}
+    </div>
+    {% endfor %}
+    {% endif %}
+<div class="container mt-5">
+    <div class="flex-container">
+        <div class="mr-5 mt-3">
+            <form action="{% url 'Doc_to_Pdf' %}" enctype="multipart/form-data" method="POST">
+                {% csrf_token %}
+                <h2>Select the PDF File:</h2>
+                <p class="mt-5 mb-3">
+                    <input type="file" name="upload_pdf" class="inputfield">
+                </p>
+                <button class="btn btn-primary">Convert to Docx File</button>
+            </form>
+            <button class="btn btn-warning mt-5" onclick="f1();">Click Here to Download</button>
+            <iframe id="download_pdf" style="display:none;"></iframe>
+        </div>
+        <div class="mr-5">
+        </div>
+        <div class="ml-5 mt-3">
+            <form action="{% url 'Doc_to_Pdf' %}" enctype="multipart/form-data" method="POST">
+                {% csrf_token %}
+                <h2>Select the Docx File:</h2>
+                <p class="mt-5 mb-3">
+                    <input type="file" name="upload_docx" class="inputfield">
+                </p>
+                <button class="btn btn-primary">Convert to Pdf File</button>
+            </form>
+            <button class="btn btn-warning mt-5" onclick="f2();">Click Here to Download</button>
+            <iframe id="download_docx" style="display:none;"></iframe>
+        <div>
+    </div>
+</div>
+</body>
+<script>
+    function f1()
+    {
+        var x = "{{ path_of_doc }}";
+        var y = document.getElementById("download_pdf");
+        y.src=x;
+    }    
+    function f2()
+    {
+        var x = "{{ path_of_pdf }}";
+        var y = document.getElementById("download_docx");
+        y.src=x;
+    }
+</script>
+{% endblock %}

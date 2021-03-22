@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block content%}
+
+{% load static %}
+<style>
+  .login-popup .box .img-area .img {
+  background-image: url("{% static 'img/instade.jpg' %}");
+}
+</style>
+<html lang="en">
+<head>
+  <title>Login</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="{% static 'stylee.css' %}" type="text/css" />
+</head>
+<body>
+<div class="login-popup">
+  {% if messages %}
+  {% for message in messages %}
+  <div style="text-align:center;" class="alert alert-warning alert-dismissible fade show" role="alert">
+    <a href="{% url 'login' %}" class="close">X</a>
+      <span aria-hidden="true">&times;</span>
+    </button>
+    {{ message }}
+  </div>
+  {% endfor %}
+  {% endif %}
+  <div class="box">
+    <div class="img-area">
+      <div class="img"><img src="{% static 'img/instade.jpg' %}" width="380px" height="380px"></div>
+      <h1></h1>
+    </div>
+
+    <div class="form">
+      <h1>Log In</h1>
+      <form action="{% url 'login' %}" method="POST">
+        {% csrf_token %}
+        <div class="mt-5">
+          <div class="form-group">
+            <input type="text" placeholder="Username" required name="username" class="form-control" />
+          </div>
+          <div class="form-group">
+            <input type="password" placeholder="Password" required name="password" class="form-control" />
+          </div>
+          <div class="inputfield">
+            <input type="submit" value="Submit" class="btn btn-primary mb-4">
+          </div>
+          <p>Not a member?<a href="{% url 'register' %}">Register here</a></p>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script src="{% static 'scriptte.js' %}"></script>
+</body>
+</html>
+{% endblock %}

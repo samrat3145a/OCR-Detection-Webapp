@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block content%}
+
+{% load static %}
+<style>
+    body{
+        margin-top:6rem;
+    }
+</style>
+<title>Welcome to OCR Detector</title>
+<body>
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-warning alert-dismissible fade show mt-3 ml-5" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        {{ message }}
+    </div>
+    {% endfor %}
+    {% endif %}
+    <p class="h1 mx-auto mt-5 mb-5" style="width:564px"><u>Welcome to Image OCR</u></p>
+    <div class="container ml-5">
+        <div class="mr-5 mt-5 ml-5">
+            <form action="{% url 'upload_for_ocr' %}" enctype="multipart/form-data" method="POST">
+                {% csrf_token %}
+                <h2>Select the File:</h2>
+                <p class="mt-5 mb-3">
+                    <input type="file" name="upload" class="inputfield">
+                </p>
+                <button class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    <div>
+</body>
+{% endblock %}

@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+{% block content%}
+
+{% load static %}
+<title>Language Translator</title>
+<style>
+    .flex-container {
+    display: flex;
+    justify-content: center;
+    }
+    img{
+        background-clip: border-box;
+        border: 1px solid rgba(0,0,0,.125);
+        border-radius: .25rem;
+    }
+</style>
+<body class="mb-5" onload="f1();f2();">
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-warning alert-dismissible fade show mt-3" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        {{ message }}
+    </div>
+
+    {% endfor %}
+    {% endif %}
+    <p class="h1 mx-auto mt-4 mb-5" style="width:400px"><u>Language Translator</u></p>
+    <div class="flex-container">
+        <div class="ml-5 mr-5">
+            <p class="h2 mx-auto mt-3 mb-3" style="width:360px">
+                Generated OCR
+                <a class="fa fa-print ml-3" id="btnPrint"></a>
+            </p>
+            <div id="dvContainer" class="mt-4 mb-5">
+                <p id="ocrText">{{ text }}</p>
+            </div>
+            <form action="{% url 'translate_language' %}" method="POST">
+                {% csrf_token %}
+                <textarea name="textarea1" style="display:none;">{{ text }}</textarea>
+                <p class="h1 mx-auto mt-4 mb-5" style="width:250px">
+                    <button class="btn btn-success">Click Here To Listen Audio</button>
+                </p>
+            </form>
+            <div class="h1 mx-auto mt-4 mb-5" style="width:330px">
+                <div class="mb-5 mt-5">
+                    <audio controls id="original_text_1" >
+                        <source src="{{ path_of_original_audio }}" type="audio/mpeg" id="original_text"></source>
+                    </audio> 
+                </div>
+            </div>
+            <p class="h2 mx-auto mt-3 mb-3" style="width:360px">
+                Choose the Language
+            </p>
+            <form action="{% url 'translate_language' %}" method="GET">
+                {% csrf_token %}
+                <div class="inputfield">
+                    <label for="language"></label>
+                    <div class="custom_select">
+                        <select name="language" id="language" required class="form-control">
+                            <option value="">Select Language</option>
+                            {% for key,value in languages.items %}
+                            <option value="{{ key }}">{{ value }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <p class="mx-auto mt-4 mb-5" style="width:200px">
+                    <button class="btn btn-warning" style="width:200px;">Submit</button>
+                </p>
+            </form>
+            <p class="mb-5">
+                {{ y }}
+            </p>
+        </div>
+        <div>
+            <p class="h2 mx-auto" style="width:230px">Original Image</p>
+            <img class="mt-4 mb-5" src="" style="width: 400px; height: 300px;" id="SM">
+
+            <form action="{% url 'translate_language' %}" method="POST">
+                {% csrf_token %}
+                <textarea name="textarea2" style="display:none;">{{ y }}</textarea>
+                <input type="text" name="Lang" hidden value="{{ lng }}">
+                <p class="h1 mx-auto mt-4 mb-5" style="width:250px">
+                    <button class="btn btn-success" id="btn1" style="display:none;">Click Here To Listen Audio</button>
+                </p>
+            </form>
+            <div class="h1 mx-auto mt-4 mb-5" style="width:330px">
+                <div class="mb-5 mt-5">
+                    <audio controls id="translated_text_1" >
+                        <source src="{{ path_of_translated_audio }}" type="audio/mpeg" id="translated_text"></source>
+                    </audio> 
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+function f1()
+{
+    var a="{{ image.upload }}";
+    var res = a.replace("OCR_detection/","/");
+    var path=res;
+    //console.log(res);
+    document.getElementById("SM").src=res;
+    var t="{{ lng }}";
+    if(t != '')
+    {
+        document.getElementById('btn1').style.display="block";
+    }
+    console.log(t);
+}
+function f2()
+{
+    var y = document.getElementById("original_text_1");
+    var x = document.getElementById("original_text");
+    if(x.src == "http://127.0.0.1:8000" + "{{ request.path }}" || y.duration < 1 || y.duration == "NaN")
+    {
+        y.style.display = "none" ;
+    }    
+    var m = document.getElementById("translated_text_1");
+    var n = document.getElementById("translated_text");
+    if(n.src == "http://127.0.0.1:8000" + "{{ request.path }}" || m.duration < 1 || m.duration == "NaN")
+    {
+        m.style.display = "none" ;
+    }
+}
+</script>
+{% endblock %}

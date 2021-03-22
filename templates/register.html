@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% block content%}
+
+{% load static %}
+<style>
+  .login-popup .box .img-area .img {
+  background-image: url("{% static 'img/instade.jpg' %}");
+  }
+  .alert-warning {
+    color: #856404;
+    background-color: #fff3cd;
+    border-color: #ffeeba;
+    z-index: 1;
+}
+</style>
+<html lang="en">
+<head>
+  <title>Register</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="{% static 'stylee.css' %}" type="text/css" />
+</head>
+<body onload="Captcha();">
+<div class="login-popup mb-5">
+  {% if messages %}
+  {% for message in messages %}
+  <div style="text-align:center;" class="alert alert-warning alert-dismissible fade show" role="alert">
+    <a href="{% url 'register' %}" class="close">X</a>
+      <span aria-hidden="true">&times;</span>
+    </button>
+    {{ message }}
+  </div>
+  {% endfor %}
+  {% endif %}
+  <div class="box">
+    <div class="img-area">
+      <div class="img"><img src="{% static 'img/instade.jpg' %}" width="400px" height="510px"></div>
+      <h1></h1>
+    </div>
+
+    <div class="form" id="calendar_form">
+      <div class="close"><a href="{% url 'index' %}"></a></div>
+      <h1>Register</h1>
+      <form  action="{% url 'register' %}" method="POST" >
+        {% csrf_token %}
+        {{ form.as_p }}
+          {% comment %} Captcha {% endcomment %}
+          <input type="text" class="form-control mb-3" id="mainCaptcha" readonly>
+          <input type="text" class="form-control mb-3" id="txtInput" placeholder="Enter the Captcha Code" autocomplete="off"/>    
+           {% comment %} Captcha {% endcomment %}
+
+        <input type="submit" value="Submit" class="btn btn-primary mb-3" onclick="ValidCaptcha();">
+      </form>
+      <p>Already registered?<a href="{% url 'login' %}">Login here</a>
+    </div>
+
+  </div>
+</div>
+
+<script src="{% static 'scriptte.js' %}"></script>
+<script type="text/javascript">
+  function Captcha(){
+      var alpha = new Array('A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z');
+      var i;
+      for (i=0;i<6;i++){
+        var a = alpha[Math.floor(Math.random() * alpha.length)];
+        var b = alpha[Math.floor(Math.random() * alpha.length)];
+        var c = alpha[Math.floor(Math.random() * alpha.length)];
+        var d = alpha[Math.floor(Math.random() * alpha.length)];
+        var e = alpha[Math.floor(Math.random() * alpha.length)];
+        var f = alpha[Math.floor(Math.random() * alpha.length)];
+        var g = alpha[Math.floor(Math.random() * alpha.length)];
+      }
+    var code = a + ' ' + b + ' ' + ' ' + c + ' ' + d + ' ' + e + ' '+ f + ' ' + g;
+    document.getElementById("mainCaptcha").value = code;
+  }
+  function ValidCaptcha(){
+      var string1 = removeSpaces(document.getElementById('mainCaptcha').value);
+      var string2 = removeSpaces(document.getElementById('txtInput').value);
+      if (string1 == string2){
+        document.getElementById("calendar_form").submit();
+      }
+      else{
+        Captcha();
+        document.getElementById("txtInput").value = "";        
+        event.preventDefault();
+        event.stopPropagation();
+
+       alert("Wrong Captcha ! Try Again");
+      }
+  }
+  function removeSpaces(string){
+    return string.split(' ').join('');
+  }
+</script>    
+
+</body>
+</html>
+{% endblock %}

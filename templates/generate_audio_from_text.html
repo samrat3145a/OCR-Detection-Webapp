@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% block content%}
+
+{% load static %}
+<title>Text to Audio</title>
+<style>
+    .flex-container {
+    display: flex;
+    justify-content: center;
+    }
+    img{
+        border:solid black 2px;
+    }
+</style>
+<body class="mb-5" onload="f1();">
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-warning alert-dismissible fade show mt-3" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        {{ message }}
+    </div>
+    {% endfor %}
+    {% endif %}
+    <p class="h1 mx-auto mt-4 mb-5" style="width:400px">Text to Audio Convert</p>
+    <div class="flex-container">
+        <div class="mr-5 mt-5">
+            <form action="{% url 'generate_audio_from_text' %}" method="POST">
+                {% csrf_token %}
+                <div class="form-group">
+                    <p class="h4 mb-3">
+                    <label for="textarea1">Enter Text for Audio Conversion</label></p>
+                    <textarea class="form-control" name ="textarea1" id="textarea1" rows="8" cols="65" placeholder="Enter Text"></textarea>
+                </div>
+                <div class="inputfield">
+                    <label for="language"></label>
+                    <div class="custom_select">
+                        <select name="language" id="language" style="width:60%; display:inline-block;" required class="form-control">
+                            <option value="">Select Language</option>
+                            {% for key,value in languages.items %}
+                            <option value="{{ key }}">{{ value }}</option>
+                            {% endfor %}
+                        </select>
+                        <button class="btn btn-success ml-4 mb-1">Convert Language</button>
+                    </div>
+                </div>
+            </form>
+            <p class="h1 mx-auto" style="width:250px;">
+                <button class="btn btn-success mt-5" onclick="f2();">Click Here To Listen Audio</button></p>
+            <div id="audio" class="mb-5 mx-auto"  style="width:250px">
+                <audio controls id="original_audio"  style="display:none;">
+                    <source src="{{ path }}"  type="audio/mpeg" ></source>
+                </audio> 
+            </div>
+        </div>
+        <div class="ml-5 mr-2 mt-5">
+            <form action="{% url 'generate_audio_from_text' %}" method="GET">
+                {% csrf_token %}
+                <div class="form-group">
+                    <p class="h4 mb-3">
+                    <label for="textarea2">Translated Text</label></p>
+                    <textarea class="form-control" name ="textarea2" readonly 
+                    style ="background: white;" id="textarea2" rows="8" 
+                    cols="65" placeholder="Translated Text">{{ translated_text }}</textarea>
+                    <input type="text" value="{{ language }}" name="language" id="language" hidden>
+                </div>
+                <p class="h1 mx-auto" style="width:250px; margin-top:68px;">
+                    <button class="btn btn-success mt-5">Click Here To Listen Audio</button>
+                </p>
+            </form>
+            <div class="h1 mx-auto mt-2 mb-5" style="width:330px">
+                <div class="mb-5">
+                    <audio controls id="translated_text_1" >
+                        <source src="{{ path_of_translated_audio }}" type="audio/mpeg" id="translated_text"></source>
+                    </audio> 
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+
+function f1()
+{
+    var m = document.getElementById("translated_text_1");
+    var n = document.getElementById("translated_text");
+    console.log(m.duration);
+    if(n.src == "http://127.0.0.1:8000" + "{{ request.path }}" || m.duration < 1 || m.duration == "NaN")
+    {
+        m.style.display = "none" ;
+    }
+}
+function f2()
+{
+    document.getElementById("original_audio").style.display="block";
+
+}
+</script>
+{% endblock %}

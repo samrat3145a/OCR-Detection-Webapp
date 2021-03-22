@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block content%}
+
+{% load static %}
+<style>
+    body{
+        margin-top:7rem;
+    }
+    #m{
+        margin-left:5rem;
+    }
+</style>
+<title>Welcome to OCR Detector</title>
+<body>
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-warning alert-dismissible fade show mt-3 ml-5" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        {{ message }}
+    </div>
+    {% endfor %}
+    {% endif %}
+    <div class="mt-5" id="m">
+        <p class="h1 mx-auto mt-5 mb-5" style="width:590px"><u>Welcome to Language Translator</u></p>
+        <div class="mt-5">
+            <form action="{% url 'upload_for_language_translator' %}" enctype="multipart/form-data" method="POST">
+                {% csrf_token %}
+                <h3>Select the File:</h3>
+                <p class="mt-5 mb-3">
+                    <input type="file" name="upload" class="inputfield">
+                </p>
+                <button class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+        <div class="mt-3">
+            <form action="{% url 'translate_language' %}" method="POST">
+                {% csrf_token %}
+                <button class="btn btn-success">Translate Language</button>
+            </form>
+        </div>
+    </div>
+</body>
+{% endblock %}
