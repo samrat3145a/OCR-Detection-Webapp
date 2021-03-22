@@ -26,6 +26,9 @@ def index(request):
     latest_image = ImageSave.objects.last()
     context={'form':form,'image':latest_image}
     return render(request,'index.html',context)
+
+def home(request):
+    return render(request,'home.html')
 	
 def output(request):
     latest_image = ImageSave.objects.last()

@@ -23,20 +23,20 @@
     </div>
     {% endfor %}
     {% endif %}
-    <p class="h1 mx-auto mt-4 mb-5" style="width:400px">Text to Audio Convert</p>
+    <p class="h1 mx-auto mt-4 mb-5" style="width:400px"><b>Text to Audio Convert</b></p>
     <div class="flex-container">
-        <div class="mr-5 mt-5">
+        <div class="mr-5">
             <form action="{% url 'generate_audio_from_text' %}" method="POST">
                 {% csrf_token %}
                 <div class="form-group">
-                    <p class="h4 mb-3">
-                    <label for="textarea1">Enter Text for Audio Conversion</label></p>
+                    <p class="h4">
+                    <label for="textarea1"><h4>Enter Text for Audio Conversion</h4></label></p>
                     <textarea class="form-control" name ="textarea1" id="textarea1" rows="8" cols="65" placeholder="Enter Text"></textarea>
                 </div>
                 <div class="inputfield">
                     <label for="language"></label>
                     <div class="custom_select">
-                        <select name="language" id="language" style="width:60%; display:inline-block;" required class="form-control">
+                        <select name="language" id="language" style="width:50%; display:inline-block;" required class="form-control">
                             <option value="">Select Language</option>
                             {% for key,value in languages.items %}
                             <option value="{{ key }}">{{ value }}</option>
@@ -54,12 +54,12 @@
                 </audio> 
             </div>
         </div>
-        <div class="ml-5 mr-2 mt-5">
+        <div class="ml-5 mr-2">
             <form action="{% url 'generate_audio_from_text' %}" method="GET">
                 {% csrf_token %}
                 <div class="form-group">
-                    <p class="h4 mb-3">
-                    <label for="textarea2">Translated Text</label></p>
+                    <p class="h4">
+                    <label for="textarea2"><h4>Translated Text</h4></label></p>
                     <textarea class="form-control" name ="textarea2" readonly 
                     style ="background: white;" id="textarea2" rows="8" 
                     cols="65" placeholder="Translated Text">{{ translated_text }}</textarea>

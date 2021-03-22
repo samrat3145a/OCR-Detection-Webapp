@@ -31,7 +31,7 @@
 <body translate="no">
   <div class="loader" id="loader"></div>
   <nav class="navbar navbar-expand-lg navbar-dark" style="font-family: 'Montserrat', sans-serif;">
-    <a class="navbar-brand" href=""><h2>DocCo</h2></a>
+    <a class="navbar-brand" href="{% url 'home' %}"><h2>DocCo</h2></a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -43,7 +43,7 @@
     {% endif %}
     <div class="navbar-nav ml-auto">
   
-      <a class="nav-link" href="{% url 'index' %}">Home</a>
+      <a class="nav-link" href="{% url 'home' %}">Home</a>
       {% if user.is_authenticated %}
       {% if user.is_superuser %}
       {% endif %}
@@ -60,22 +60,21 @@
     </div>
   </nav>
   <div id="wrapper" class="toggled">
-        <div class="overlay" style="display: block;"></div>
 
       <!-- Sidebar -->
       <nav class="navbar navbar-inverse navbar-fixed-top" id="sidebar-wrapper" role="navigation">
           <ul class="nav sidebar-nav">
               <li>
-                  <a href="#"><i class="fa fa-fw fa-home"></i> Home</a>
+                  <a href="{% url 'home' %}"><i class="fa fa-fw fa-home"></i> Home</a>
               </li>
               <li>
-                  <a href="#"><i class="fa fa-fw fa-folder"></i> OCR and Audio</a>
+                  <a href="{% url 'index' %}"><i class="fa fa-fw fa-folder"></i> OCR and Audio</a>
               </li>
               <li>
-                  <a href="#"><i class="fa fa-fw fa-file-o"></i> Translate Language</a>
+                  <a href="{% url 'translate_language' %}"><i class="fa fa-fw fa-file-o"></i> Translate Language</a>
               </li>
               <li>
-                  <a href="#"><i class="fa fa-fw fa-cog"></i> Audio Translator</a>
+                  <a href="{% url 'generate_audio_from_text' %}""><i class="fa fa-fw fa-cog"></i> Audio Translator</a>
               </li>
               <li>
                   <a href="#"><i class="fa fa-fw fa-dropbox"></i> PDF to Doc/Doc to PDF</a>
@@ -92,7 +91,7 @@
 
         <!-- Page Content -->
         <div id="page-content-wrapper">
-          <button type="button" class="hamburger animated fadeInLeft is-open" data-toggle="offcanvas">
+          <button type="button" class="hamburger animated fadeInLeft is-closed" data-toggle="offcanvas">
             <span class="hamb-top"></span>
             <span class="hamb-middle"></span>
             <span class="hamb-bottom"></span>
