@@ -28,7 +28,8 @@
     {% endfor %}
     {% endif %}
 <div class="container mt-5">
-    <div class="flex-container">
+    <h1 class="text-center"><b>OCR and Audio Generator</b></h1>
+    <div class="flex-container mt-5">
         <div class="mr-5 mt-3">
             <form action="{% url 'index' %}" enctype="multipart/form-data" method="POST">
                 {% csrf_token %}
@@ -42,13 +43,10 @@
                 </div>
             </form>
         </div>
-        <div class="mr-5" id="my_button">
-           
-        </div>
-        <div class="ml-2">
-            <p class="h2 mx-auto mb-4" style="width:350px; visibility:hidden;text-align: center;" id="text_upld">Uploaded Image</p>
-            <div class="card" style="width: auto; height: auto;" id="div_for_upImg">
-                <img class="card-img-top" style="width: 380px; height: auto;visibility:hidden;" id="SM" src="">
+        <div class="ml-2" id="div_for_upImg" style="display: none;">
+            <p class="h2 mx-auto mb-4" style="width:350px;text-align: center;">Uploaded Image</p>
+            <div class="card" style="width: auto; height: auto;" >
+                <img class="card-img-top" style="width: 380px; height: auto;" id="SM" src="">
             </div>
         </div>
     <div>
@@ -68,9 +66,8 @@
         }
         else
         {
-            document.getElementById("SM").style.visibility="visible";
+            document.getElementById("div_for_upImg").style.display = "block" ;
             document.getElementById("get_ocr_btn").style.display="block";
-            document.getElementById("text_upld").style.visibility="visible";
         }
         //console.log('hello');
     }

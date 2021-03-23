@@ -87,15 +87,18 @@ def generate_audio(request):
 
 def translate_language(request):
     latest_image = ImageSave.objects.last()
+    print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$4")
+    print(latest_image)
     text,final_path_img = OCR(str(latest_image.upload))
     languages = Get_Languages()
     if request.method == "GET":
         language = request.GET.get('language')
-        y = Language_Translator(str(latest_image.upload),language)
-        languages = Get_Languages()
-        context={'image':latest_image,'text':text,'final_path_img':final_path_img,'y':y,
-                'languages':languages,'lng':language}
-        return render(request,'translate_language.html',context)
+        if(language):
+            y = Language_Translator(str(latest_image.upload),language)
+            languages = Get_Languages()
+            context={'image':latest_image,'text':text,'final_path_img':final_path_img,'y':y,
+                    'languages':languages,'lng':language}
+            return render(request,'translate_language.html',context)
     if request.method == "POST":
         original_text = request.POST.get('textarea1')
         translated_text = request.POST.get('textarea2')
