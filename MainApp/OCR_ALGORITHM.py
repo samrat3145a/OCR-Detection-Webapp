@@ -82,7 +82,6 @@ def OCR(get_image_path):
     a = get_image_path
     img=cv2.imread(os.path.join(a))
     text=GetImageOCR(img)
-    img=cv2.imread(os.path.join(a))
     final_path = Detect_Text_Image_Letter(img,get_image_path)
     return (text,final_path)
 
@@ -211,3 +210,35 @@ def DOCX_to_PDF(path_of_doc):
     convert(docx_file ,pdf_file)
     pdf_path = str(pdf_file).replace("OCR_detection/","/")
     return pdf_path
+
+def conversion(img,file_type):  
+    resized = img
+    filename = 'output_compress'+ file_type
+    img_resized = cv2.imwrite(filename=filename, img=resized)
+
+
+def getInputType(ip):
+    n = len(ip)
+    filename = ""
+    if(ip[n-4]=="." and ip[n-3]=="p" and ip[n-2]=="n" and ip[n-1]=="g"):
+        filename = ".png"
+    elif(ip[n-4]=="j" and ip[n-3]=="p" and ip[n-2]=="e" and ip[n-1]=="g"):
+        filename = ".jpeg"
+    elif(ip[n-4]=="." and ip[n-3]=="j" and ip[n-2]=="p" and ip[n-1]=="g"):
+        filename = ".jpg"
+    return filename
+
+def convert_image(input_path,file_type):
+    img=cv2.imread(os.path.join(input_path)) 
+    if(file_type=="grayscale"):
+        filename = "OCR_detection/static/converted_img/output" + getInputType(input_path)
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY ) 
+    elif(file_type=="black"):
+        filename = "OCR_detection/static/converted_img/output" + getInputType(input_path)
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY ) 
+        (thresh, img) = cv2.threshold(img, 127, 255, cv2.THRESH_BINARY)
+    else:
+        filename = "OCR_detection/static/converted_img/output" + file_type
+    cv2.imwrite(filename=filename, img=img)
+    output_path = filename.replace("OCR_detection/","/")
+    return output_path

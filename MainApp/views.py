@@ -168,4 +168,23 @@ def Doc_to_Pdf(request):
     return render(request,'doc2pdf.html')
 
 def image_conversion(request):
+    if request.method == "GET":
+        latest_image = ImageSave.objects.last()
+        file_type = request.GET.get('file_type')
+        print(file_type)
+        if(file_type):
+            output_path = convert_image(str(latest_image.upload),file_type)
+            messages.success(request, 'Image Successfully Converted !')
+            context={'output_image':output_path}
+            return render(request,'image_conversion.html',context)
+    if request.method == "POST":
+        form = ImageUpload(request.POST or None,request.FILES or None)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Image Successfully Uploaded !')
+            latest_image = ImageSave.objects.last()
+            context={'input_image':latest_image}
+            return render(request,'image_conversion.html',context)
+        else:
+            print(form.errors)
     return render(request,'image_conversion.html')
