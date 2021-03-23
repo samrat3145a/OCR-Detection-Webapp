@@ -14,6 +14,7 @@ urlpatterns = [
     path('Output_1/generate_audio/', views.generate_audio, name="generate_audio"),
     path('translate_language/', views.translate_language, name="translate_language"),
     url('image_conversion/', views.image_conversion, name="image_conversion"),
+    url('image_compression/', views.image_compression, name="image_compression"),
     url('generate_audio_from_text/', views.generate_audio_from_text, name="generate_audio_from_text"),
     url('Doc_to_Pdf/', views.Doc_to_Pdf, name="Doc_to_Pdf"),
 

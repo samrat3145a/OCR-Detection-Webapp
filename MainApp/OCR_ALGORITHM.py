@@ -242,3 +242,17 @@ def convert_image(input_path,file_type):
     cv2.imwrite(filename=filename, img=img)
     output_path = filename.replace("OCR_detection/","/")
     return output_path
+
+def compress_img(input_path,scale): 
+    img=cv2.imread(os.path.join(input_path)) 
+    scale = int(scale)   
+    width = int(img.shape[1] * scale / 100)  
+    height = int(img.shape[0] * scale / 100)  
+    dim = (width, height)  
+
+    resized = cv2.resize(img, dim, interpolation=cv2.INTER_AREA) 
+    filename = "OCR_detection/static/compressed_img/output" + getInputType(input_path)
+    cv2.imwrite(filename=filename, img=resized)
+    output_path = filename.replace("OCR_detection/","/")
+    compressed_size = os.path.getsize(filename)
+    return output_path,compressed_size

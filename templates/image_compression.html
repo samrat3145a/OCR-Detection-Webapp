@@ -2,26 +2,15 @@
 {% block content%}
 
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Compression</title>
-    <style>
-        body{
-            margin-top: 6rem;
-        }
-        .flex-container {
-            display: flex;
-            justify-content: center;
-        }
-    </style>
-</head>
-<body onload="f1();f2();">
+<style>
+.flex-container {
+    display: flex;
+    justify-content: center;
+}
+</style>
     {% if messages %}
     {% for message in messages %}
-    <div class="alert alert-warning alert-dismissible fade show mt-3 ml-5" role="alert">
+    <div class="alert alert-success alert-dismissible fade show mt-3 text-center" role="alert">
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
         </button>
@@ -29,10 +18,10 @@
     </div>
     {% endfor %}
     {% endif %}
-    <p class="h1 mx-auto mt-4 mb-5" style="width:564px"><u>Welcome to Image Compression</u></p>
+    <p class="h1 text-center mt-4 mb-5"><b>Welcome to Image Compression</b></p>
     <div class="container ml-5">
         <div class="flex-container">
-            <div class="mt-3 mr-5">
+            <div class="mt-3">
                 <form action="{% url 'image_compression' %}" enctype="multipart/form-data" method="POST">
                     {% csrf_token %}
                     <h3>Select the image file:</h3>
@@ -41,11 +30,11 @@
                     </p>
                     <button class="btn btn-primary">Submit</button>
                 </form>
-                <div class="mt-5">
-                    <form action="{% url 'image_compression' %}" method="POST">
+                <div class="mt-5" id="select_option" style="display: none;">
+                    <form action="{% url 'image_compression' %}" method="GET">
                         {% csrf_token %}
                         <div class="inputfield">
-                            <label for="percentage">Select compression type:</label>
+                            <label for="percentage" style="font-size: 20px;">Select compression type:</label>
                             <div class="custom_select">
                                 <select name="percentage" id="percentage" required class="form-control">
                                     <option value="">Select Type</option>
@@ -66,44 +55,44 @@
             <div class="mr-5 ml-5">
             </div>
             <div class="ml-5" >
-                <div class="ml-5" style="display: none;" id="compressed_img">
+                <div class="ml-5" style="display: none;" id="output_image">
                     <p class="h2 mx-auto" style="width:270px;" >Compressed Image</p>
-                    <p><img class="card-img-top mt-2" style="width: 300px; height: auto;" src="{{outpath}}"></p>
-                    <p class="h5 mt-3 mb-3">Compressed Size : {{ compressed_size }}KB</p> 
-                    <a download="custom-filename.jpg" href="{{ outpath }}" style="width:250px;" class="btn btn-primary mb-5" title="ImageName">Download</a>
+                    <p><img class="card-img-top mt-2" id="output_img" style="width: 300px; height: auto;" src=""></p>
+                    <p class="h5 mt-3 mb-3">Compressed Size : {{ compressed_size }} KB</p> 
+                    <a download="{{ output_image }}" href="{{ output_image }}" style="width:250px;" class="btn btn-primary mb-5" title="ImageName">Download</a>
                 </div>
                 <div id="original_image" style="display: none;">     
-                    <p class="h2 mx-auto mb-4" style="width:250px; visibility:hidden;" id="text_upld">Original Image</p>
+                    <p class="h2 mx-auto mb-4" style="width:250px;" id="text_upld">Original Image</p>
                     <div class="card" style="width: auto; height: auto;" id="div_for_upImg">
-                        <img class="card-img-top" style="width: 300px; height: auto; visibility:hidden;" id="SM" src="">
+                        <img class="card-img-top" style="width: 300px; height: auto;" id="SM" src="">
                     </div>
-                    <p class="h5 mt-3">Image Size : {{ image_size }}KB</p>  
+                    <p class="h5 mt-3">Image Size : {{ image_size }} KB</p>  
                 </div>
             </div>
         </div>
     </div>
-</body>
 <script>
-    function f1()
+$(window).on("load", function() 
     {
         var a="{% for message in messages %}{{ message }}{% endfor %}";
         var n = a.localeCompare("Image Successfully Uploaded !");
         var orig_img = document.getElementById("original_image");
         if(n!=0)
         {
-            document.getElementById("SM").style.visibility="hidden";
             document.getElementById("div_for_upImg").style.display = "none" ;
             orig_img.style.display = "none";
         }
         else
         {
-            document.getElementById("SM").style.visibility="visible";
-            document.getElementById("text_upld").style.visibility="visible";
+            var a="{{ input_image.upload }}";
+            var res = a.replace("OCR_detection/","/");
+            var path=res;
+            document.getElementById("SM").src=res;
+            document.getElementById("select_option").style.display = "block" ;
             orig_img.style.display = "block";
         }
         var z = a.localeCompare("Image Successfully Compressed !");
-        //console.log(z);
-        var t = document.getElementById("compressed_img");
+        var t = document.getElementById("output_image");
         if(z!=0)
         {
             t.style.display = "none";
@@ -111,19 +100,11 @@
         else
         {
             t.style.display = "block";
+            var temp = "{{ output_image }}";
+            console.log(temp);
+            document.getElementById("output_img").src=temp;
+            document.getElementById("select_option").style.display = "block" ;
         }
-        //console.log(t.style.display);
-    }
-    function f2()
-    {
-        var a="{{ image.upload }}";
-        //console.log(a);
-        var res = a.replace("OCR_detection/","/");
-        var path=res;
-        //console.log(res);
-        document.getElementById("SM").src=res;
-    }
-
+    });
 </script>
-</html>
 {% endblock %}

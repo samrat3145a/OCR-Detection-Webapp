@@ -188,3 +188,27 @@ def image_conversion(request):
         else:
             print(form.errors)
     return render(request,'image_conversion.html')
+
+def image_compression(request):
+    if request.method == "GET":
+        latest_image = ImageSave.objects.last()
+        percentage = request.GET.get('percentage')
+        print("$$$$$$$$$$$$$$$$")
+        print(percentage)
+        if(percentage):
+            output_path,compressed_size = compress_img(str(latest_image.upload),percentage)
+            messages.success(request, 'Image Successfully Compressed !')
+            context={'output_image':output_path,'compressed_size':compressed_size}
+            return render(request,'image_compression.html',context)
+    if request.method == "POST":
+        form = ImageUpload(request.POST or None,request.FILES or None)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Image Successfully Uploaded !')
+            latest_image = ImageSave.objects.last()
+            image_size = os.path.getsize(str(latest_image.upload))
+            context={'input_image':latest_image,'image_size':image_size}
+            return render(request,'image_compression.html',context)
+        else:
+            print(form.errors)
+    return render(request,'image_compression.html')
