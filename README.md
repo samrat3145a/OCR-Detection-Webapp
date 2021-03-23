@@ -1,4 +1,3 @@
-README
 # OCR-Detection-Webapp
 
 To clone this project use the following command :
@@ -10,3 +9,5 @@ Run the following commands:
 2>Go to project directory and open a terminal.Then write the following command ->
   python manage.py migrate
   python manage.py runserver
+If any error shows up run the following commands :
+  python manage.py drop OR python manage.py sqlflush
