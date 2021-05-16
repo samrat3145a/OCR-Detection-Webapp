@@ -1,3 +1,4 @@
+from django.http.response import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render,redirect
 from MainApp.forms import ImageUpload
 from MainApp.models import ImageSave
@@ -8,6 +9,7 @@ from MainApp.models import ImageSave,PdfSave,DocxSave
 
 from django.contrib import messages, auth
 from django.utils.html import strip_tags
+from django.http import HttpResponse
 from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import render, redirect, get_object_or_404
@@ -26,6 +28,20 @@ def index(request):
     latest_image = ImageSave.objects.last()
     context={'form':form,'image':latest_image}
     return render(request,'index.html',context)
+    
+def upload_for_language_translator(request):
+    if request.method == "POST":
+        form = ImageUpload(request.POST or None,request.FILES or None)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Image Successfully Uploaded !')
+            return redirect('upload_for_language_translator')
+        else:
+            print(form.errors)
+    form = ImageUpload(request.POST)
+    latest_image = ImageSave.objects.last()
+    context={'form':form,'image':latest_image}
+    return render(request,'upload_for_language_translator.html',context)
 
 def home(request):
     return render(request,'home.html')
@@ -87,8 +103,6 @@ def generate_audio(request):
 
 def translate_language(request):
     latest_image = ImageSave.objects.last()
-    print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$4")
-    print(latest_image)
     text,final_path_img = OCR(str(latest_image.upload))
     languages = Get_Languages()
     if request.method == "GET":
@@ -109,7 +123,6 @@ def translate_language(request):
             return render(request,'translate_language.html',context)
         if str(translated_text) != "None":
             if language1:
-                print(language1)
                 path_of_audio_file = Generate_Audio_Using_Text_and_Lang(str(translated_text),language1)
                 context={'image':latest_image,'text':text,'languages':languages,
                     'path_of_translated_audio': path_of_audio_file,'y':translated_text,'lng':language1}
@@ -148,18 +161,18 @@ def Doc_to_Pdf(request):
         if form.is_valid():
             form.save()
             latest_file = PdfSave.objects.last()
-            print(str(latest_file.upload_pdf))
+            # print(str(latest_file.upload_pdf))
             path_of_doc = PDF_to_DOC(str(latest_file.upload_pdf))
-            print(path_of_doc)
+            # print(path_of_doc)
             messages.success(request, 'File Successfully Converted to Docx !')
             context={'form':form,'file':latest_file,'path_of_doc':path_of_doc}
             return render(request,'doc2pdf.html',context)
         elif form2.is_valid():
             form2.save()
             latest_file = DocxSave.objects.last()
-            print(str(latest_file.upload_docx))
+            # print(str(latest_file.upload_docx))
             path_of_pdf = DOCX_to_PDF(str(latest_file.upload_docx))
-            print(path_of_pdf)
+            # print(path_of_pdf)
             messages.success(request, 'File Successfully Converted to Pdf !')
             context={'form':form,'file':latest_file,'path_of_pdf':path_of_pdf}
             return render(request,'doc2pdf.html',context)
@@ -171,7 +184,7 @@ def image_conversion(request):
     if request.method == "GET":
         latest_image = ImageSave.objects.last()
         file_type = request.GET.get('file_type')
-        print(file_type)
+        # print(file_type)
         if(file_type):
             output_path = convert_image(str(latest_image.upload),file_type)
             messages.success(request, 'Image Successfully Converted !')
@@ -189,26 +202,29 @@ def image_conversion(request):
             print(form.errors)
     return render(request,'image_conversion.html')
 
-def image_compression(request):
-    if request.method == "GET":
+def compress_result(request):
+    if request.method == 'GET':
         latest_image = ImageSave.objects.last()
-        percentage = request.GET.get('percentage')
-        print("$$$$$$$$$$$$$$$$")
-        print(percentage)
+        percentage = request.GET['value']
         if(percentage):
             output_path,compressed_size = compress_img(str(latest_image.upload),percentage)
-            messages.success(request, 'Image Successfully Compressed !')
-            context={'output_image':output_path,'compressed_size':compressed_size}
-            return render(request,'image_compression.html',context)
+            # messages.success(request, 'Image Successfully Compressed !')
+            context={'output_image':output_path,'compressed_size':compressed_size,'messages':'Image Successfully Compressed !'}
+            return JsonResponse(context)
+    else:
+        return HttpResponse("Request method is not a GET")
+            
+def image_compression(request):
     if request.method == "POST":
-        form = ImageUpload(request.POST or None,request.FILES or None)
+        print("$$$$$$$$$$$$$$$$$$$$$$$$$$")
+        form = ImageUpload(data = request.POST , files=request.FILES)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Image Successfully Uploaded !')
-            latest_image = ImageSave.objects.last()
-            image_size = os.path.getsize(str(latest_image.upload))
-            context={'input_image':latest_image,'image_size':image_size}
-            return render(request,'image_compression.html',context)
+            # messages.success(request, 'Image Successfully Uploaded !')
+            latest_image = ImageSave.objects.last().upload
+            image_size = os.path.getsize(str(latest_image))
+            context={'input_image':str(latest_image),'image_size':image_size,'messages':'Image Successfully Uploaded !'}
+            return JsonResponse(context)
         else:
             print(form.errors)
     return render(request,'image_compression.html')

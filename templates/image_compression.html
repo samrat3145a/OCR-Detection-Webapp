@@ -3,108 +3,124 @@
 
 {% load static %}
 <style>
-.flex-container {
-    display: flex;
-    justify-content: center;
-}
+    .flex-container {
+        display: flex;
+        justify-content: center;
+    }
 </style>
-    {% if messages %}
-    {% for message in messages %}
-    <div class="alert alert-success alert-dismissible fade show mt-3 text-center" role="alert">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-        {{ message }}
-    </div>
-    {% endfor %}
-    {% endif %}
-    <p class="h1 text-center mt-4 mb-5"><b>Welcome to Image Compression</b></p>
-    <div class="container ml-5">
-        <div class="flex-container">
-            <div class="mt-3">
-                <form action="{% url 'image_compression' %}" enctype="multipart/form-data" method="POST">
+<div id="alert-msg" class="alert-dismissible fade mt-3" role="alert">
+    <div id="msg"></div>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<p class="h1 text-center mt-4 mb-5"><b>Welcome to Image Compression</b></p>
+<div class="container ml-5">
+    <div class="flex-container">
+        <div class="mt-3">
+            <form id="upload-file" action="{% url 'image_compression' %}" enctype="multipart/form-data" method="POST">
+                {% csrf_token %}
+                <h3>Select the image file:</h3>
+                <p class="mt-5 mb-3">
+                    <input type="file" name="upload" class="inputfield">
+                </p>
+                <button id="submit-btn" class="btn btn-primary">Submit</button>
+            </form>
+            <div class="mt-5" id="select_option" style="display: none;">
+                <form action="{% url 'image_compression' %}" method="GET">
                     {% csrf_token %}
-                    <h3>Select the image file:</h3>
-                    <p class="mt-5 mb-3">
-                        <input type="file" name="upload" class="inputfield">
-                    </p>
-                    <button class="btn btn-primary">Submit</button>
-                </form>
-                <div class="mt-5" id="select_option" style="display: none;">
-                    <form action="{% url 'image_compression' %}" method="GET">
-                        {% csrf_token %}
-                        <div class="inputfield">
-                            <label for="percentage" style="font-size: 20px;">Select compression type:</label>
-                            <div class="custom_select">
-                                <select name="percentage" id="percentage" required class="form-control">
-                                    <option value="">Select Type</option>
-                                    <option value="40">Low</option>
-                                    <option value="35">Fine</option>
-                                    <option value="30">Medium</option>
-                                    <option value="25">High</option>
-                                    <option value="20">Highest</option>
-                                </select>
-                            </div>
+                    <div class="inputfield">
+                        <label for="percentage" style="font-size: 20px;">Select compression type:</label>
+                        <div class="custom_select">
+                            <select name="percentage" id="percentage" required class="form-control">
+                                <option value="">Select Type</option>
+                                <option value="40">Low</option>
+                                <option value="35">Fine</option>
+                                <option value="30">Medium</option>
+                                <option value="25">High</option>
+                                <option value="20">Highest</option>
+                            </select>
                         </div>
-                        <p class="mx-auto mt-4 mb-5">
-                            <button class="btn btn-warning" style="width:200px;">Compress</button>
-                        </p>
-                    </form>
-                </div>
-            </div>
-            <div class="mr-5 ml-5">
-            </div>
-            <div class="ml-5" >
-                <div class="ml-5" style="display: none;" id="output_image">
-                    <p class="h2 mx-auto" style="width:270px;" >Compressed Image</p>
-                    <p><img class="card-img-top mt-2" id="output_img" style="width: 300px; height: auto;" src=""></p>
-                    <p class="h5 mt-3 mb-3">Compressed Size : {{ compressed_size }} KB</p> 
-                    <a download="{{ output_image }}" href="{{ output_image }}" style="width:250px;" class="btn btn-primary mb-5" title="ImageName">Download</a>
-                </div>
-                <div id="original_image" style="display: none;">     
-                    <p class="h2 mx-auto mb-4" style="width:250px;" id="text_upld">Original Image</p>
-                    <div class="card" style="width: auto; height: auto;" id="div_for_upImg">
-                        <img class="card-img-top" style="width: 300px; height: auto;" id="SM" src="">
                     </div>
-                    <p class="h5 mt-3">Image Size : {{ image_size }} KB</p>  
+                    <p class="mx-auto mt-4 mb-5">
+                        <button id="compress-btn" class="btn btn-warning" style="width:200px;">Compress</button>
+                    </p>
+                </form>
+            </div>
+        </div>
+        <div class="mr-5 ml-5">
+        </div>
+        <div class="ml-5">
+            <div class="ml-5" style="display: none;" id="output_image">
+                <p class="h2 mx-auto" style="width:270px;">Compressed Image</p>
+                <p><img class="card-img-top mt-2" id="output_img" style="width: 300px; height: auto;" src=""></p>
+                <p id="compressed-size" class="h5 mt-3 mb-3"></p>
+                <a id="download-img" download="" href="" style="width:250px;" class="btn btn-primary mb-5"
+                    title="ImageName">Download</a>
+            </div>
+            <div id="original_image" style="display: none;">
+                <p class="h2 mx-auto mb-4" style="width:250px;" id="text_upld">Original Image</p>
+                <div class="card" style="width: auto; height: auto;" id="div_for_upImg">
+                    <img class="card-img-top" style="width: 300px; height: auto;" id="SM" src="">
                 </div>
+                <p id="original-size" class="h5 mt-3"></p>
             </div>
         </div>
     </div>
+</div>
 <script>
-$(window).on("load", function() 
-    {
-        var a="{% for message in messages %}{{ message }}{% endfor %}";
-        var n = a.localeCompare("Image Successfully Uploaded !");
-        var orig_img = document.getElementById("original_image");
-        if(n!=0)
-        {
-            document.getElementById("div_for_upImg").style.display = "none" ;
-            orig_img.style.display = "none";
-        }
-        else
-        {
-            var a="{{ input_image.upload }}";
-            var res = a.replace("OCR_detection/","/");
-            var path=res;
-            document.getElementById("SM").src=res;
-            document.getElementById("select_option").style.display = "block" ;
-            orig_img.style.display = "block";
-        }
-        var z = a.localeCompare("Image Successfully Compressed !");
-        var t = document.getElementById("output_image");
-        if(z!=0)
-        {
-            t.style.display = "none";
-        }
-        else
-        {
-            t.style.display = "block";
-            var temp = "{{ output_image }}";
-            console.log(temp);
-            document.getElementById("output_img").src=temp;
-            document.getElementById("select_option").style.display = "block" ;
-        }
+    $('#compress-btn').on("click", function (e) {
+        e.preventDefault();
+        var value = $("#percentage").val();
+        console.log(value);
+        $.ajax({
+            type: "GET",
+            url: "/compress_result",
+            data: {
+                value: value
+            },
+            success: function (data) {
+                console.log(data);
+                $("#original_image").css("display", "none");
+                $("#output_image").css("display", "block");
+                document.getElementById("output_img").src = data.output_image;
+                $("#compressed-size").html("Compressed Size :" + data.compressed_size + " B");
+                $("#download-img").attr({
+                    download: data.output_image,
+                    href: data.output_image
+                });
+                $("#alert-msg").addClass("alert alert-success show");
+                $("#msg").html(data.messages);
+            }
+        })
+    });
+
+    $('#submit-btn').on("click", function (e) {
+        e.preventDefault();
+        var data = new FormData($('#upload-file').get(0));
+        $("#output_image").css("display", "none");
+        $.ajax({
+            url: $('#upload-file').attr('action'),
+            type: $('#upload-file').attr('method'),
+            data: data,
+            cache: false,
+            processData: false,
+            contentType: false,
+            success: function (data) {
+                console.log(data);
+                $("#original_image").css("display", "block").delay(200).fadeIn();
+                document.getElementById("SM").src = data.input_image.replace("OCR_detection/", "/");
+                $("#original-size").html("Image Size :"+ data.image_size +"B");
+                $("#select_option").css("display", "block");
+                $("#alert-msg").addClass("alert alert-success show");
+                $("#msg").html(data.messages);
+            }
+        });
+    });
+</script>
+<script>
+    $("#alert-msg .close").on("click",function(){
+        $("#alert-msg").removeClass("alert alert-success show");
     });
 </script>
 {% endblock %}
