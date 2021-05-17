@@ -5,12 +5,12 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
-
+  <link rel="icon" type="image/x-icon" href='{% static "img/instade.ico" %}' />
   <link href="https://fonts.googleapis.com/css2?family=Baloo+Bhai+2&family=Bree+Serif&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://designmodo.github.io/Flat-UI/dist/css/flat-ui.min.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
-  <link rel="stylesheet" href="https://daneden.github.io/animate.css/animate.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
   <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
@@ -73,8 +73,7 @@
 
       <a class="nav-link" href="{% url 'home' %}">Home</a>
       {% if user.is_authenticated %}
-      {% if user.is_superuser %}
-      {% endif %}
+      <a class="nav-link">{{ user.username }}</a>
       <a class="nav-link" href="javascript:{document.getElementById('logout').submit()}">Logout</a>
       <form id="logout" method="POST" action="{% url 'logout' %}">
         {% csrf_token %}

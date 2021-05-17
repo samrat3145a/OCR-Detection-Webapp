@@ -2,6 +2,7 @@
 {% block content%}
 
 {% load static %}
+<title>Image Conversion</title>
 <style>
   .flex-container {
     display: flex;
@@ -29,6 +30,7 @@
                 <p class="mt-5 mb-3">
                     <input type="file" name="upload" class="inputfield">
                 </p>
+                <input type="text" name="user_id" class="inputfield" value="{{ user_id }}" style="display: none;">
                 <button class="btn btn-primary">Submit</button>
             </form>
             <div class="mt-5" id="select_option" style="display: none;">
@@ -65,7 +67,8 @@
             <img class="mt-4" src="" style="width: 350px; height: auto;" id="output_img">
           </div>  
           <div class="ml-5 mt-4" style="display: none;" id="download">
-              <a download="{{ output_image }}" href="{{ output_image }}" style="width:250px;" class="btn btn-primary" title="ImageName">
+              <p id="file-type-text" class="h5">File Type -> </p>
+              <a download="{{ output_image }}" href="{{ output_image }}" style="width:250px;" class="btn btn-primary mt-2" title="ImageName">
                   Download
               </a>
           </div>     
@@ -102,6 +105,9 @@
       document.getElementById("output_img").src=temp;
       document.getElementById("select_option").style.display = "block" ;
       document.getElementById("download").style.display = "block" ;
+      $("#file_type").val("{{ file_type }}");
+      var get_type = $("#file_type option:selected")[0].text;
+      $("#file-type-text").append(get_type);
     }
   });
 </script>

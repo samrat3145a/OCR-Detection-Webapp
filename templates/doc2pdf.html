@@ -34,6 +34,7 @@
                 <p class="mt-5 mb-3">
                     <input type="file" name="upload_pdf" accept=".pdf" required class="inputfield">
                 </p>
+                <input type="text" name="user_id" class="inputfield" value="{{ user_id }}" style="display: none;">
                 <button id="convert-pdf-btn" class="btn btn-primary">Convert to Docx & Download</button>
             </form>
             <iframe id="download_docx" style="display:none;"></iframe>
@@ -47,6 +48,7 @@
                 <p class="mt-5 mb-3">
                     <input type="file" name="upload_docx" required accept=".docx" class="inputfield">
                 </p>
+                <input type="text" name="user_id" class="inputfield" value="{{ user_id }}" style="display: none;">
                 <button id="convert-docx-btn" class="btn btn-primary">Convert to Pdf & Download</button>
             </form>
             <iframe class="mt-3" id="download_pdf" style="display:none;"></iframe>

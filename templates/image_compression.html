@@ -2,6 +2,7 @@
 {% block content%}
 
 {% load static %}
+<title>Image Compression</title>
 <style>
     .flex-container {
         display: flex;
@@ -24,6 +25,7 @@
                 <p class="mt-5 mb-3">
                     <input type="file" name="upload" accept="image/*" class="inputfield">
                 </p>
+                <input type="text" name="user_id" class="inputfield" value="{{ user_id }}" style="display: none;">
                 <button id="submit-btn" class="btn btn-primary">Submit</button>
             </form>
             <div class="mt-5" id="select_option" style="display: none;">
@@ -84,7 +86,7 @@
                 $("#original_image").css("display", "none");
                 $("#output_image").css("display", "block");
                 document.getElementById("output_img").src = data.output_image;
-                $("#compressed-size").html("Compressed Size :" + data.compressed_size + " B");
+                $("#compressed-size").html("Compressed Size : " + data.compressed_size + " B");
                 $("#download-img").attr({
                     download: data.output_image,
                     href: data.output_image
@@ -110,7 +112,7 @@
                 console.log(data);
                 $("#original_image").css("display", "block").delay(200).fadeIn();
                 document.getElementById("SM").src = data.input_image.replace("OCR_detection/", "/");
-                $("#original-size").html("Image Size :"+ data.image_size +"B");
+                $("#original-size").html("Image Size : "+ data.image_size +" B");
                 $("#select_option").css("display", "block");
                 $("#alert-msg").addClass("alert alert-success show");
                 $("#msg").html(data.messages);
@@ -121,7 +123,7 @@
 <script>
     $(document).ready(function () {
         $(document).ajaxStart(function () {
-            $("#loader").slideDown();
+            $("#loader").show().delay(500);
         });
         $(document).ajaxComplete(function () {
             $("#loader").slideUp();
