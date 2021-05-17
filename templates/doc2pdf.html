@@ -18,16 +18,13 @@
 
 <title>Welcome to Pdf to Doc Convertor</title>
 <body>
-    {% if messages %}
-    {% for message in messages %}
-    <div class="alert alert-warning alert-dismissible fade show mt-3" role="alert">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-        {{ message }}
-    </div>
-    {% endfor %}
-    {% endif %}
+<div id="alert-msg" class="alert-dismissible fade mt-3" role="alert">
+    <div id="msg"></div>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<p class="h1 text-center mt-4 mb-5"><b>Welcome to PDF and DOC Conversion !</b></p>
 <div class="container mt-5">
     <div class="flex-container">
         <div class="mr-5 mt-3">
@@ -48,24 +45,15 @@
                 {% csrf_token %}
                 <h2>Select the Docx File:</h2>
                 <p class="mt-5 mb-3">
-                    <input type="file" name="upload_docx" accept=".docx" class="inputfield">
+                    <input type="file" name="upload_docx" required accept=".docx" class="inputfield">
                 </p>
                 <button id="convert-docx-btn" class="btn btn-primary">Convert to Pdf & Download</button>
             </form>
-            <button id="download-docx-btn" class="btn btn-warning mt-5" onclick="f2();" style="display: ;">Click Here to Download</button>
-            <iframe id="download_pdf" style="display:;"></iframe>
+            <iframe class="mt-3" id="download_pdf" style="display:none;"></iframe>
         <div>
     </div>
 </div>
 </body>
-<script> 
-    function f2()
-    {
-        var x = "{{ path_of_pdf }}";
-        var y = document.getElementById("download_pdf");
-        y.src=x;
-    }
-</script>
 <script>
     $('#convert-pdf-btn').on("click", function (e) {
         e.preventDefault();
@@ -80,6 +68,8 @@
             success: function (data) {
                 console.log(data);
                 $("#download_docx").attr("src",data.path_of_doc);
+                $("#alert-msg").addClass("alert alert-success show");
+                $("#msg").html(data.messages);
             }
         });
     });
@@ -96,10 +86,26 @@
             success: function (data) {
                 console.log(data);
                 $("#download_pdf").attr("src",data.path_of_pdf);
-                var y = document.getElementById("download_pdf");
-                y.src=data.path_of_pdf;
+                $("#download_pdf").css("display","block");
+                $("#alert-msg").addClass("alert alert-success show");
+                $("#msg").html(data.messages);
             }
         });
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        $(document).ajaxStart(function () {
+            $("#loader").show();
+        });
+        $(document).ajaxComplete(function () {
+            $("#loader").slideUp();
+        });
+    });
+</script>
+<script>
+    $("#alert-msg .close").on("click",function(){
+        $("#alert-msg").removeClass("alert alert-success show");
     });
 </script>
 {% endblock %}

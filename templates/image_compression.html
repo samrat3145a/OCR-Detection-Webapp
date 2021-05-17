@@ -22,7 +22,7 @@
                 {% csrf_token %}
                 <h3>Select the image file:</h3>
                 <p class="mt-5 mb-3">
-                    <input type="file" name="upload" class="inputfield">
+                    <input type="file" name="upload" accept="image/*" class="inputfield">
                 </p>
                 <button id="submit-btn" class="btn btn-primary">Submit</button>
             </form>
