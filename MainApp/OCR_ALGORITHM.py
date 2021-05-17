@@ -181,8 +181,15 @@ def Generate_Audio_Only(text):
     path = path.replace("OCR_detection/","/")
     return path
 
+def Generate_Audio_Using_Text_and_Lang_and_name(pr,text,lang):
+    speak = gTTS(text=text, lang=lang, slow= False)
+    path = "OCR_detection/static/Generated_Audio/audio_generated_"+pr+".mp3"
+    speak.save(path)
+    path = path.replace("OCR_detection/","/")
+    return path
+    
 def Generate_Audio_Using_Text_and_Lang(text,lang):
-    speak = gTTS(text=text, lang='en', slow= False)
+    speak = gTTS(text=text, lang=lang, slow= False)
     path = "OCR_detection/static/Generated_Audio/audio_generated.mp3"
     speak.save(path)
     path = path.replace("OCR_detection/","/")

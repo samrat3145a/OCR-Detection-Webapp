@@ -20,8 +20,30 @@
     window.console = window.console || function (t) {};
   </script>
   <style>
+    .progress{
+      background-color: blue;
+      height: 3px;
+      width: 0vw;
+      display: block;
+      position: absolute;
+      animation: load 1s ease-in-out 1s 1 normal;
+      z-index: 3;
+    }
+    @keyframes load {
+      0%{
+        width: 0vw;
+      }
+      70%{
+        width: 80vw;
+      }
+      100%{
+        width: 100vw;
+      }
+      
+    }
     #loader {
       position: fixed;
+      display: none;
       width: 100vw;
       height: 100vh;
       background: #fff no-repeat center url('/static/loader.gif');
@@ -31,6 +53,7 @@
 </head>
 
 <body translate="no">
+  <div class="progress"></div>
   <div class="loader" id="loader"></div>
   <nav class="navbar navbar-expand-lg navbar-dark" style="font-family: 'Montserrat', sans-serif;">
     <a class="navbar-brand" href="{% url 'home' %}">
@@ -155,14 +178,6 @@
     if (document.location.search.match(/type=embed/gi)) {
       window.parent.postMessage("resize", "*");
     }
-  </script>
-  <script>
-    var loader = document.getElementById('loader');
-    window.addEventListener("load", function () {
-      setTimeout(function () {
-        loader.style.display = 'none';
-      }, 1000);
-    });
   </script>
 
 </body>

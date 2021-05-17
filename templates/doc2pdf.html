@@ -31,46 +31,75 @@
 <div class="container mt-5">
     <div class="flex-container">
         <div class="mr-5 mt-3">
-            <form action="{% url 'Doc_to_Pdf' %}" enctype="multipart/form-data" method="POST">
+            <form id="form-pdf-to-doc" action="{% url 'Doc_to_Pdf' %}" enctype="multipart/form-data" method="POST">
                 {% csrf_token %}
                 <h2>Select the PDF File:</h2>
                 <p class="mt-5 mb-3">
-                    <input type="file" name="upload_pdf" class="inputfield">
+                    <input type="file" name="upload_pdf" accept=".pdf" required class="inputfield">
                 </p>
-                <button class="btn btn-primary">Convert to Docx File</button>
+                <button id="convert-pdf-btn" class="btn btn-primary">Convert to Docx & Download</button>
             </form>
-            <button class="btn btn-warning mt-5" onclick="f1();">Click Here to Download</button>
-            <iframe id="download_pdf" style="display:none;"></iframe>
+            <iframe id="download_docx" style="display:none;"></iframe>
         </div>
         <div class="mr-5">
         </div>
         <div class="ml-5 mt-3">
-            <form action="{% url 'Doc_to_Pdf' %}" enctype="multipart/form-data" method="POST">
+            <form id="form-doc-to-pdf" action="{% url 'Doc_to_Pdf' %}" enctype="multipart/form-data" method="POST">
                 {% csrf_token %}
                 <h2>Select the Docx File:</h2>
                 <p class="mt-5 mb-3">
-                    <input type="file" name="upload_docx" class="inputfield">
+                    <input type="file" name="upload_docx" accept=".docx" class="inputfield">
                 </p>
-                <button class="btn btn-primary">Convert to Pdf File</button>
+                <button id="convert-docx-btn" class="btn btn-primary">Convert to Pdf & Download</button>
             </form>
-            <button class="btn btn-warning mt-5" onclick="f2();">Click Here to Download</button>
-            <iframe id="download_docx" style="display:none;"></iframe>
+            <button id="download-docx-btn" class="btn btn-warning mt-5" onclick="f2();" style="display: ;">Click Here to Download</button>
+            <iframe id="download_pdf" style="display:;"></iframe>
         <div>
     </div>
 </div>
 </body>
-<script>
-    function f1()
-    {
-        var x = "{{ path_of_doc }}";
-        var y = document.getElementById("download_pdf");
-        y.src=x;
-    }    
+<script> 
     function f2()
     {
         var x = "{{ path_of_pdf }}";
-        var y = document.getElementById("download_docx");
+        var y = document.getElementById("download_pdf");
         y.src=x;
     }
+</script>
+<script>
+    $('#convert-pdf-btn').on("click", function (e) {
+        e.preventDefault();
+        var data = new FormData($('#form-pdf-to-doc').get(0));
+        $.ajax({
+            url: $('#form-pdf-to-doc').attr('action'),
+            type: $('#form-pdf-to-doc').attr('method'),
+            data: data,
+            cache: true,
+            processData: false,
+            contentType: false,
+            success: function (data) {
+                console.log(data);
+                $("#download_docx").attr("src",data.path_of_doc);
+            }
+        });
+    });
+    $('#convert-docx-btn').on("click", function (e) {
+        e.preventDefault();
+        var data = new FormData($('#form-doc-to-pdf').get(0));
+        $.ajax({
+            url: $('#form-doc-to-pdf').attr('action'),
+            type: $('#form-doc-to-pdf').attr('method'),
+            data: data,
+            cache: true,
+            processData: false,
+            contentType: false,
+            success: function (data) {
+                console.log(data);
+                $("#download_pdf").attr("src",data.path_of_pdf);
+                var y = document.getElementById("download_pdf");
+                y.src=data.path_of_pdf;
+            }
+        });
+    });
 </script>
 {% endblock %}

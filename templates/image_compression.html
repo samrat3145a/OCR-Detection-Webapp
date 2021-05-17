@@ -119,6 +119,16 @@
     });
 </script>
 <script>
+    $(document).ready(function () {
+        $(document).ajaxStart(function () {
+            $("#loader").slideDown();
+        });
+        $(document).ajaxComplete(function () {
+            $("#loader").slideUp();
+        });
+    });
+</script>
+<script>
     $("#alert-msg .close").on("click",function(){
         $("#alert-msg").removeClass("alert alert-success show");
     });

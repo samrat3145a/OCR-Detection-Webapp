@@ -138,24 +138,20 @@ def generate_audio_from_text(request):
     if request.method == "POST":
         text = request.POST.get('textarea1')
         language = request.POST.get('language')
+        # print(text)
+        # print(language)
         if language:
+            original_audio = Generate_Audio_Using_Text_and_Lang_and_name("original_audio",str(text),'en')
             translated_text = Language_Translator_With_Text(str(text),language)
-            path_of_audio_file = Generate_Audio_Using_Text_and_Lang(str(text),language)
-            context={'path':path_of_audio_file,'languages':languages,
-                    'translated_text':translated_text,'language':language}
-            return render(request,'generate_audio_from_text.html',context)
-    if request.method == "GET":
-        text = request.GET.get('textarea2')
-        language = request.GET.get('language')
-        path_of_audio_file = Generate_Audio_Using_Text_and_Lang(str(text),language)
-        context={'text':text,'languages':languages,'path_of_translated_audio': path_of_audio_file,
-                'translated_text':text}
-        return render(request,'generate_audio_from_text.html',context)
+            translate_audio = Generate_Audio_Using_Text_and_Lang_and_name("translated_audio",str(translated_text),language)
+            context={'path_of_original_audio':original_audio,'translated_text':translated_text,'language':language,'path_of_translated_audio': translate_audio,'messages':'Text Successfully Translated !!'}
+            return JsonResponse(context)
     context={'languages':languages}
     return render(request,'generate_audio_from_text.html',context)
 
 def Doc_to_Pdf(request):
     if request.method == "POST":
+        print("444444444444444444")
         form2 = DocxUpload(request.POST or None,request.FILES or None)
         form = PdfUpload(request.POST or None,request.FILES or None)
         if form.is_valid():
@@ -165,8 +161,8 @@ def Doc_to_Pdf(request):
             path_of_doc = PDF_to_DOC(str(latest_file.upload_pdf))
             # print(path_of_doc)
             messages.success(request, 'File Successfully Converted to Docx !')
-            context={'form':form,'file':latest_file,'path_of_doc':path_of_doc}
-            return render(request,'doc2pdf.html',context)
+            context={'path_of_doc':path_of_doc}
+            return JsonResponse(context)
         elif form2.is_valid():
             form2.save()
             latest_file = DocxSave.objects.last()
@@ -174,8 +170,8 @@ def Doc_to_Pdf(request):
             path_of_pdf = DOCX_to_PDF(str(latest_file.upload_docx))
             # print(path_of_pdf)
             messages.success(request, 'File Successfully Converted to Pdf !')
-            context={'form':form,'file':latest_file,'path_of_pdf':path_of_pdf}
-            return render(request,'doc2pdf.html',context)
+            context={'path_of_pdf':path_of_pdf}
+            return JsonResponse(context)
         else:
             print(form.errors)
     return render(request,'doc2pdf.html')
