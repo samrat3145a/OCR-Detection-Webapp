@@ -1,7 +1,7 @@
 # OCR-Detection-Webapp
 
 To clone this project use the following command :
-git clone https://github.com/samrat3145a/OCR-Detection-Webapp.git
+git clone -b Ajax_Call https://github.com/samrat3145a/OCR-Detection-Webapp.git
 
 To run server 
 Run the following commands:
