@@ -12,26 +12,22 @@
         border:solid black 2px;
     }
 </style>
-<body class="mb-5" onload="f1();">
-    {% if messages %}
-    {% for message in messages %}
-    <div class="alert alert-warning alert-dismissible fade show mt-3" role="alert">
+<body class="mb-5">
+    <div id="alert-msg" class="alert-dismissible fade mt-3" role="alert">
+        <div id="msg"></div>
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
         </button>
-        {{ message }}
     </div>
-    {% endfor %}
-    {% endif %}
-    <p class="h1 mx-auto mt-4 mb-5" style="width:400px"><b>Text to Audio Convert</b></p>
+    <p class="h1 mx-auto mt-2 mb-5" style="width:400px"><b>Text to Audio Convert</b></p>
     <div class="flex-container">
         <div class="mr-5">
-            <form action="{% url 'generate_audio_from_text' %}" method="POST">
+            <form id="f-text" action="{% url 'generate_audio_from_text' %}" method="POST">
                 {% csrf_token %}
                 <div class="form-group">
                     <p class="h4">
                     <label for="textarea1"><h4>Enter Text for Audio Conversion</h4></label></p>
-                    <textarea class="form-control" name ="textarea1" id="textarea1" rows="8" cols="65" placeholder="Enter Text"></textarea>
+                    <textarea class="form-control" required name ="textarea1" id="textarea1" rows="8" cols="65" placeholder="Enter Text"></textarea>
                 </div>
                 <div class="inputfield">
                     <label for="language"></label>
@@ -42,37 +38,34 @@
                             <option value="{{ key }}">{{ value }}</option>
                             {% endfor %}
                         </select>
-                        <button class="btn btn-success ml-4 mb-1">Convert Language</button>
+                        <button id="convert-btn" class="btn btn-success ml-4 mb-1">Convert Language</button>
                     </div>
                 </div>
             </form>
-            <p class="h1 mx-auto" style="width:250px;">
-                <button class="btn btn-success mt-5" onclick="f2();">Click Here To Listen Audio</button></p>
+            <p id="original-audio-btn" onclick="$('#original_audio').slideDown(200);" class="h1 mx-auto" style="width:250px;display: none;">
+                <button class="btn btn-success mt-5">Click Here To Listen Audio</button></p>
             <div id="audio" class="mb-5 mx-auto"  style="width:250px">
                 <audio controls id="original_audio"  style="display:none;">
-                    <source src="{{ path }}"  type="audio/mpeg" ></source>
+                    <source src=""  type="audio/mpeg" ></source>
                 </audio> 
             </div>
         </div>
         <div class="ml-5 mr-2">
-            <form action="{% url 'generate_audio_from_text' %}" method="GET">
-                {% csrf_token %}
                 <div class="form-group">
                     <p class="h4">
                     <label for="textarea2"><h4>Translated Text</h4></label></p>
                     <textarea class="form-control" name ="textarea2" readonly 
-                    style ="background: white;" id="textarea2" rows="8" 
-                    cols="65" placeholder="Translated Text">{{ translated_text }}</textarea>
-                    <input type="text" value="{{ language }}" name="language" id="language" hidden>
+                    style ="background: white;color: #3c3939" id="textarea2" rows="8" 
+                    cols="65" placeholder="Translated Text"></textarea>
+                    <input type="text" value="" name="language" id="language" hidden>
                 </div>
-                <p class="h1 mx-auto" style="width:250px; margin-top:68px;">
+                <p id="translate-audio-btn" onclick="$('#translated_audio').slideDown(200);" class="h1 mx-auto" style="width:250px; margin-top:68px;display: none;">
                     <button class="btn btn-success mt-5">Click Here To Listen Audio</button>
                 </p>
-            </form>
             <div class="h1 mx-auto mt-2 mb-5" style="width:330px">
                 <div class="mb-5">
-                    <audio controls id="translated_text_1" >
-                        <source src="{{ path_of_translated_audio }}" type="audio/mpeg" id="translated_text"></source>
+                    <audio controls id="translated_audio" style="display: none;">
+                        <source src="" type="audio/mpeg"></source>
                     </audio> 
                 </div>
             </div>
@@ -80,21 +73,43 @@
     </div>
 </body>
 <script>
-
-function f1()
-{
-    var m = document.getElementById("translated_text_1");
-    var n = document.getElementById("translated_text");
-    console.log(m.duration);
-    if(n.src == "http://127.0.0.1:8000" + "{{ request.path }}" || m.duration < 1 || m.duration == "NaN")
-    {
-        m.style.display = "none" ;
-    }
-}
-function f2()
-{
-    document.getElementById("original_audio").style.display="block";
-
-}
+    $('#convert-btn').on("click", function (e) {
+        e.preventDefault();
+        var data = new FormData($('#f-text').get(0));
+        $.ajax({
+            url: $('#f-text').attr('action'),
+            type: $('#f-text').attr('method'),
+            data: data,
+            cache: false,
+            processData: false,
+            contentType: false,
+            success: function (data) {
+                console.log(data);
+                $("#translate-audio-btn").delay(20).slideDown();
+                $("#original-audio-btn").delay(20).slideDown();
+                $("#translated_text").attr("src",data.path);
+                $("#textarea2").html(data.translated_text);
+                $("#original_audio").attr("src",data.path_of_original_audio);
+                $("#translated_audio").attr("src",data.path_of_translated_audio);
+                $("#alert-msg").addClass("alert alert-success show");
+                $("#msg").html(data.messages);
+            }
+        });
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        $(document).ajaxStart(function () {
+            $("#loader").slideDown();
+        });
+        $(document).ajaxComplete(function () {
+            $("#loader").slideUp();
+        });
+    });
+</script>
+<script>
+    $("#alert-msg .close").on("click",function(){
+        $("#alert-msg").removeClass("alert alert-success show");
+    });
 </script>
 {% endblock %}

@@ -86,4 +86,12 @@ function f2()
     }
 }
 </script>
+<script>
+    $(".flex-container button").on("click",function(){
+        $("#loader").slideDown();
+        $("body").on("load",function(){
+            $("#loader").slideUp();
+        });
+    });
+</script>
 {% endblock %}

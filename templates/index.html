@@ -15,7 +15,7 @@
         visibility: block;
     }
 </style>
-<title>Welcome to OCR Detector</title>
+<title>OCR and Audio Generator</title>
 <body onload="f1();f2();">
     {% if messages %}
     {% for message in messages %}
@@ -37,6 +37,8 @@
                 <p class="mt-5 mb-3">
                     <input type="file" name="upload" class="inputfield">
                 </p>
+                
+                <input type="text" name="user_id" class="inputfield" value="{{ user_id }}" style="display: none;">
                 <button class="btn btn-primary">Submit</button>
                 <div class="mt-5" id="get_ocr_btn" style="display: none;">
                     <a href="{% url 'output' %}" class="btn btn-success">Click here to Get OCR Result</a>
