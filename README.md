@@ -26,7 +26,9 @@ Installing all the dependencies :
   pip install django, mysqlclient, opencv-python, pytesseract, requests, winspeech, SpeechRecognition, googletrans, gtts
 ```
 - Create a database name "Samrat" (You can change this name in settings.py)
+ 
 Installing pytesseract application ->
+
 - tesseract-ocr-setup-3.02.02 ->  https://webwerks.dl.sourceforge.net/project/tesseract-ocr-alt/tesseract-ocr-setup-3.02.02.exe
 - Install tesseract-ocr-setup-3.02.02
 - Open Xampp Control Panel
