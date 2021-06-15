@@ -127,4 +127,12 @@ function f2()
     }
 }
 </script>
+<script>
+    $("button").on("click",function(){
+        $("#loader").show();
+        $("body").on("load",function(){
+            $("#loader").slideUp();
+        });
+    });
+</script>
 {% endblock %}

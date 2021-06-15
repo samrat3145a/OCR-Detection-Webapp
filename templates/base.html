@@ -1,38 +1,66 @@
 {% load static %}
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
-  
-    <link href="https://fonts.googleapis.com/css2?family=Baloo+Bhai+2&family=Bree+Serif&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://designmodo.github.io/Flat-UI/dist/css/flat-ui.min.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="https://daneden.github.io/animate.css/animate.min.css">
-    <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">   
-    <link rel="stylesheet" type="text/css" href="{% static 'base.css' %}"> 
+  <link rel="icon" type="image/x-icon" href='{% static "img/instade.ico" %}' />
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+Bhai+2&family=Bree+Serif&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://designmodo.github.io/Flat-UI/dist/css/flat-ui.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+  <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+    integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+  <link rel="stylesheet" type="text/css" href="{% static 'base.css' %}">
   <script>
-    window.console = window.console || function(t) {};
+    window.console = window.console || function (t) {};
   </script>
-  <style >
-
+  <style>
+    .progress{
+      background-color: blue;
+      height: 3px;
+      width: 0vw;
+      display: block;
+      position: absolute;
+      animation: load 1s ease-in-out 1s 1 normal;
+      z-index: 3;
+    }
+    @keyframes load {
+      0%{
+        width: 0vw;
+      }
+      70%{
+        width: 80vw;
+      }
+      100%{
+        width: 100vw;
+      }
+      
+    }
     #loader {
-      position:fixed;
-      width : 100vw;
-      height : 100vh;
-      background : #fff no-repeat center url('/static/loader.gif');
-      z-index : 99999;
+      position: fixed;
+      display: none;
+      width: 100vw;
+      height: 100vh;
+      background: #fff no-repeat center url('/static/loader.gif');
+      z-index: 99999;
     }
   </style>
 </head>
+
 <body translate="no">
+  <div class="progress"></div>
   <div class="loader" id="loader"></div>
   <nav class="navbar navbar-expand-lg navbar-dark" style="font-family: 'Montserrat', sans-serif;">
-    <a class="navbar-brand" href="{% url 'home' %}"><h2>DocCo</h2></a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <a class="navbar-brand" href="{% url 'home' %}">
+      <h2>DocCo</h2>
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
+      aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     {% if user.is_authenticated %}
@@ -42,13 +70,12 @@
     </div>
     {% endif %}
     <div class="navbar-nav ml-auto">
-  
+
       <a class="nav-link" href="{% url 'home' %}">Home</a>
       {% if user.is_authenticated %}
-      {% if user.is_superuser %}
-      {% endif %}
+      <a class="nav-link">{{ user.username }}</a>
       <a class="nav-link" href="javascript:{document.getElementById('logout').submit()}">Logout</a>
-      <form id="logout" method="POST" action="{% url 'logout' %}" >
+      <form id="logout" method="POST" action="{% url 'logout' %}">
         {% csrf_token %}
         <input type="hidden">
       </form>
@@ -61,107 +88,102 @@
   </nav>
   <div id="wrapper" class="toggled">
 
-      <!-- Sidebar -->
-      <nav class="navbar navbar-inverse navbar-fixed-top" id="sidebar-wrapper" role="navigation">
-          <ul class="nav sidebar-nav">
-              <li>
-                  <a href="{% url 'home' %}"><i class="fa fa-fw fa-home"></i> Home</a>
-              </li>
-              <li>
-                  <a href="{% url 'index' %}"><i class="fa fa-fw fa-folder"></i> OCR and Audio</a>
-              </li>
-              <li>
-                  <a href="{% url 'translate_language' %}"><i class="fa fa-fw fa-file-o"></i> Translate Language</a>
-              </li>
-              <li>
-                  <a href="{% url 'generate_audio_from_text' %}""><i class="fa fa-fw fa-cog"></i> Audio Translator</a>
-              </li>
-              <li>
-                  <a href="{% url 'Doc_to_Pdf' %}"><i class="fa fa-fw fa-dropbox"></i> PDF to Doc/Doc to PDF</a>
-              </li>
-              <li>
-                  <a href="{% url 'image_conversion' %}"><i class="fa fa-fw fa-twitter"></i> Image Conversion</a>
-              </li>
-              <li>
-                  <a href="{% url 'image_compression' %}"><i class="fa fa-fw fa-bank"></i> Image Compression</a>
-              </li>
-          </ul>
-      </nav>
-        <!-- /#sidebar-wrapper -->
+    <!-- Sidebar -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="sidebar-wrapper" role="navigation">
+      <ul class="nav sidebar-nav">
+        <li>
+          <a href="{% url 'home' %}"><i class="fa fa-fw fa-home"></i> Home</a>
+        </li>
+        <li>
+          <a href="{% url 'index' %}"><i class="fa fa-fw fa-folder"></i> OCR and Audio</a>
+        </li>
+        <li>
+          <a href="{% url 'upload_for_language_translator' %}"><i class="fa fa-fw fa-file-o"></i> Translate Language</a>
+        </li>
+        <li>
+          <a href="{% url 'generate_audio_from_text' %}"><i class="fa fa-fw fa-cog"></i> Audio Translator</a>
+        </li>
+        <li>
+          <a href="{% url 'Doc_to_Pdf' %}"><i class="fa fa-fw fa-dropbox"></i> PDF to Doc/Doc to PDF</a>
+        </li>
+        <li>
+          <a href="{% url 'image_conversion' %}"><i class="fa fa-fw fa-twitter"></i> Image Conversion</a>
+        </li>
+        <li>
+          <a href="{% url 'image_compression' %}"><i class="fa fa-fw fa-bank"></i> Image Compression</a>
+        </li>
+      </ul>
+    </nav>
+    <!-- /#sidebar-wrapper -->
 
-        <!-- Page Content -->
-        <div id="page-content-wrapper">
-          <button type="button" class="hamburger animated fadeInLeft is-closed" data-toggle="offcanvas">
-            <span class="hamb-top"></span>
-            <span class="hamb-middle"></span>
-            <span class="hamb-bottom"></span>
-          </button>
-            <div class="container">
-              {% block content%}
-              {% endblock %}
-            </div>
-        </div>
-        <!-- /#page-content-wrapper -->
-
+    <!-- Page Content -->
+    <div id="page-content-wrapper">
+      <button type="button" class="hamburger animated fadeInLeft is-closed" data-toggle="offcanvas">
+        <span class="hamb-top"></span>
+        <span class="hamb-middle"></span>
+        <span class="hamb-bottom"></span>
+      </button>
+      <div class="container">
+        {% block content%}
+        {% endblock %}
+      </div>
     </div>
-    <!-- /#wrapper -->
-    <script src="https://cpwebassets.codepen.io/assets/common/stopExecutionOnTimeout-157cd5b220a5c80d4ff8e0e70ac069bffd87a61252088146915e8726e5d9f147.js"></script>
+    <!-- /#page-content-wrapper -->
+
+  </div>
+  <!-- /#wrapper -->
+  <script
+    src="https://cpwebassets.codepen.io/assets/common/stopExecutionOnTimeout-157cd5b220a5c80d4ff8e0e70ac069bffd87a61252088146915e8726e5d9f147.js">
+  </script>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-      <script id="rendered-js">
-$(document).ready(function () {
-  var trigger = $('.hamburger'),
-  overlay = $('.overlay'),
-  isClosed = false;
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  <script id="rendered-js">
+    $(document).ready(function () {
+      var trigger = $('.hamburger'),
+        overlay = $('.overlay'),
+        isClosed = false;
 
-  trigger.click(function () {
-    hamburger_cross();
-  });
+      trigger.click(function () {
+        hamburger_cross();
+      });
 
-  function hamburger_cross() {
+      function hamburger_cross() {
 
-    if (isClosed == true) {
-      overlay.hide();
-      trigger.removeClass('is-open');
-      trigger.addClass('is-closed');
-      isClosed = false;
-    } else {
-      overlay.show();
-      trigger.removeClass('is-closed');
-      trigger.addClass('is-open');
-      isClosed = true;
-    }
-  }
+        if (isClosed == true) {
+          overlay.hide();
+          trigger.removeClass('is-open');
+          trigger.addClass('is-closed');
+          isClosed = false;
+        } else {
+          overlay.show();
+          trigger.removeClass('is-closed');
+          trigger.addClass('is-open');
+          isClosed = true;
+        }
+      }
 
-  $('[data-toggle="offcanvas"]').click(function () {
-    $('#wrapper').toggleClass('toggled');
-  });
-});
-//# sourceURL=pen.js
-    </script>
-
-  
-
-
-<script>
-  if (document.location.search.match(/type=embed/gi)) {
-    window.parent.postMessage("resize", "*");
-  }
-</script>
-<script>
-    var loader = document.getElementById('loader');
-    window.addEventListener ("load", function() {
-    setTimeout(function(){
-      loader.style.display = 'none';},1000);
+      $('[data-toggle="offcanvas"]').click(function () {
+        $('#wrapper').toggleClass('toggled');
+      });
     });
-</script>
+    //# sourceURL=pen.js
+  </script>
 
 
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
- 
+
+
+  <script>
+    if (document.location.search.match(/type=embed/gi)) {
+      window.parent.postMessage("resize", "*");
+    }
+  </script>
+
 </body>
+
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+
 
 </html>

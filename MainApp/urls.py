@@ -15,8 +15,10 @@ urlpatterns = [
     path('translate_language/', views.translate_language, name="translate_language"),
     url('image_conversion/', views.image_conversion, name="image_conversion"),
     url('image_compression/', views.image_compression, name="image_compression"),
+    url('upload_for_language_translator/', views.upload_for_language_translator, name="upload_for_language_translator"),
     url('generate_audio_from_text/', views.generate_audio_from_text, name="generate_audio_from_text"),
     url('Doc_to_Pdf/', views.Doc_to_Pdf, name="Doc_to_Pdf"),
+    url('compress_result/$', views.compress_result, name='compress_result'), 
 
 ]
 # if settings.DEBUG:
