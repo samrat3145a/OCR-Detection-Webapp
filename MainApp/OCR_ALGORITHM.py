@@ -10,6 +10,7 @@ import speech_recognition as spr
 from googletrans import Translator
 from gtts import gTTS
 import googletrans 
+pytesseract.pytesseract.tesseract_cmd = 'C:\Program Files (x86)\Tesseract-OCR\Tesseract.exe'
 
 def Detect_Text_Image_Letter(img_b,path):
     hImg,wImg,_ =  img_b.shape

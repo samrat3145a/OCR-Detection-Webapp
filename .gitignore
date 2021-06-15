@@ -4,3 +4,6 @@ OCR_detection/static/new_pdf
 OCR_detection/static/compressed_img
 OCR_detection/static/converted_img
 OCR_detection/static/Generated_Audio
+MainApp/migrations/__pycache__
+MainApp/__pycache__
+OCR_detection/__pycache__
