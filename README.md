@@ -44,6 +44,19 @@ Installing pytesseract application ->
   python manage.py drop
   python manage.py sqlflush
 ```
+- Some screenshots of this project -> 
+- ![image](https://user-images.githubusercontent.com/52879078/124522384-b4da9900-de10-11eb-91f8-95d6136f356d.png)
+- ![image](https://user-images.githubusercontent.com/52879078/124522398-c02dc480-de10-11eb-93b5-98d2d256bee7.png)
+- ![image](https://user-images.githubusercontent.com/52879078/124522405-c4f27880-de10-11eb-8ac9-cd79a4bbd9c5.png)
+- ![image](https://user-images.githubusercontent.com/52879078/124522409-c885ff80-de10-11eb-9af4-0a30118db4e1.png)
+- ![image](https://user-images.githubusercontent.com/52879078/124522411-ccb21d00-de10-11eb-86ca-eaaa4df99497.png)
+- ![image](https://user-images.githubusercontent.com/52879078/124522418-cfad0d80-de10-11eb-8841-79e2182a50db.png)
+![image](https://user-images.githubusercontent.com/52879078/124522426-d50a5800-de10-11eb-965a-5320a24b354a.png)
+![image](https://user-images.githubusercontent.com/52879078/124522433-dc316600-de10-11eb-9bbc-566fa0058947.png)
 
-![image](https://user-images.githubusercontent.com/52879078/124522341-8bba0880-de10-11eb-9e2f-98e01716b6e5.png)
+
+
+
+
+
 
