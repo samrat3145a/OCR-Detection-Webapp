@@ -44,3 +44,6 @@ Installing pytesseract application ->
   python manage.py drop
   python manage.py sqlflush
 ```
+
+![image](https://user-images.githubusercontent.com/52879078/124522341-8bba0880-de10-11eb-9e2f-98e01716b6e5.png)
+
